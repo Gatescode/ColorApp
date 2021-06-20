@@ -1,45 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
+import * as React from 'react';
+import { Text, View, StyleSheet, Image, SafeAreaView } from 'react-native';
+import Constants from 'expo-constants';
+import * as SplashScreen from 'expo-splash-screen'; // <-- import it
+import Home from './app/screens/Home';
+// Prevent native splash screen from autohiding before App component declaration
+SplashScreen.preventAutoHideAsync().catch(console.warn); // it's good to explicitly catch and inspect any error
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
+    React.useEffect(() => {
+        setTimeout(async () => {
+            await SplashScreen.hideAsync();
+        }, 1000); // <-- Set this to `5000` ms to hide it after 5 seconds
+    }, []);
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-        await Font.loadAsync(Entypo.font);
-        await new Promise(resolve => setTimeout(resolve, 10000));
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setAppIsReady(true);
-      }
-    }
+    return (
+        <Home />
 
-    prepare();
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
-    return null;
-  }
-
-  return (
-    <View
-      style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      onLayout={onLayoutRootView}>
-      <Image source={require('C:\\Users\\jaina\\OneDrive\\Documents\\Arihant - NODEJS\\Color App\\ColorApp\\ColorApp\\app\\assets\\splash.png')} />
-      <Entypo name="rocket" size={30} />
-      
-    </View>
-  );
+    );
 }
