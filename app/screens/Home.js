@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image, SafeAreaView, Pressable, Dimensions } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 import Rainbow from '../assets/HomeRainbow.svg';
-import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import { loadAsync, useFonts } from 'expo-font';
 import { useState } from 'react';
 import AppLoading from 'expo-app-loading';
-import { wp, hp } from '../assets/dimen';
-import normalize from 'react-native-normalize';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;

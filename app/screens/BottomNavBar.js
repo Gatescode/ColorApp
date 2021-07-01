@@ -1,9 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, {Component, useState} from 'react';
 import Home from './Home';
-import Homeicon from '../assets/home.svg';
+import Gallery from './Gallery';
+import HomeIcon from '../assets/home.svg';
+import GalleryIcon from '../assets/gallery.svg';
+import SettingsIcon from '../assets/settings.svg';
 import { loadAsync } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import Settings from './Settings';
 
 // https://www.youtube.com/watch?v=gPaBicMaib4
 
@@ -21,11 +25,21 @@ const Tabs = () => {
         return(
             <Tab.Navigator screenOptions={({route}) => ({
                 tabBarIcon: ({focused}) => {
-                    return <Homeicon />
+                    if (route.name === "Home"){
+                        return <HomeIcon />;
+                    }
+                    else if (route.name === "Gallery"){
+                        return <GalleryIcon />;
+                    }
+                    else if (route.name === "Settings"){
+                        return <SettingsIcon />;
+                    }
                 }
                 
             })} tabBarOptions={{labelStyle: {fontFamily: "Apercu"}}}>
                 <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="Gallery" component={Gallery}/>
+                <Tab.Screen name="Settings" component={Settings}/>
             </Tab.Navigator>
         );
     } else {
