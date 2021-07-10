@@ -14,7 +14,7 @@ const getFonts = () =>
         ApercuBold: require("../assets/Apercu-Bold.otf"),
         Apercu: require("../assets/Apercu-Regular.otf"),
 });
-
+AsyncStorage.removeItem("paintingnames");
 const retrievePaintingNames = async () => {
     try {
         const retrievedArray = await AsyncStorage.getItem('paintingnames');
@@ -66,7 +66,7 @@ async function getCArray(stri){
 export default function Gallery(props){
     const [fontsloaded, setFontsLoaded] = useState(false);
     const [colorsLoaded, setColorsLoaded] = useState(null);
-    const [listCS, setListCS] = useState(null);
+    const [listCS, setListCS] = useState([]);
     const [list, setList] = useState(variable);
     const curId = list.length > 0 ? list[list.length-1].id +1 : 1;
     const [currentId, setCurrentId] = useState(curId);
@@ -77,7 +77,6 @@ export default function Gallery(props){
     const [showPalletteColor, setShowPalletteColor] = useState(null);
     const navigation = useNavigation();
     
-    
 
     //list currently equals []
 
@@ -85,6 +84,7 @@ export default function Gallery(props){
         setShouldEnterText(false);
         setShowPalletteColor(null);
         setColorsLoaded(null);
+        setShouldEnterTextCS(false);
     })
     
     useEffect(() => {//SHOW PALLEETTE COLOR NOT CHANGING, USE EFFECT ONLY RUNNING ONCE
@@ -111,8 +111,15 @@ export default function Gallery(props){
             abortController.abort();
         };
     },[showPalletteColor]);
+    useEffect(() => {
+        //colorsLoaded is concatinating itself.
+        if(colorsLoaded != null){
+            var hexCodesArrayReal = JSON.parse(JSON.stringify(colorsLoaded));
+            setListCS(oldValue => oldValue.concat(hexCodesArrayReal));
+        }
+    }, []);
     if (fontsloaded) {
-        
+    
         if (showPalletteColor == null && colorsLoaded == null){
             return (
             
@@ -123,6 +130,24 @@ export default function Gallery(props){
                             {console.log("HERE IS DA LIST!! --  " + list + `   ${showPalletteColor}      ${colorsLoaded}`)}
                             {list.map((item) => (
                                 <Pressable style={styles.paintingBtn} key={item.id} onPress={() => {
+                                    try {
+                                        AsyncStorage.getItem("paintingnames").then((biglist2) => {
+                                            if (biglist2 === null){
+                                                biglist2 = [];
+                                            }
+                                            var vartest = JSON.parse(biglist2);
+                                            for (var i =0;i<vartest.length;i++){
+                                                if (vartest[i].ptname == item.ptname){
+                                                    setListCS(vartest[i].hcArray);
+                                                    console.log(`%c ${listCS}`, 'color: #609171')
+                                                }
+                                            }
+                                        });
+                        
+                                    } catch (er) {
+                                        console.error(er);
+                                    }
+                                    //SET LISTCS TO THE LIST OF PAINTING NAME
                                     setShowPalletteColor(item.ptname);
                                 }}>
                                     <Text style={styles.paintingBtnText}>{item.ptname}</Text>
@@ -135,11 +160,30 @@ export default function Gallery(props){
                             <View style={{height: (67/734)*windowHeight, display: shouldEnterText ? "flex" : "none",  marginBottom: (80/734)*windowHeight}}>
                                 <TextInput ref={function(input){if(input!=null && !shouldEnterText){input.clear()}}} style={{height: "100%",backgroundColor: '#F5F3F0', borderRadius: 9, fontFamily: "Apercu", fontSize: 25, letterSpacing: -2, paddingLeft: (56/414)*windowWidth}} placeholder={"Type pallette name..."} onChangeText={(val) => setNameValue(val)}>
                                 </TextInput>
+                                
                                 <Pressable style={{ backgroundColor: "#8ED1CD", height: (50/734)*windowHeight, width: (50/734)*windowHeight, zIndex: 1, position: "absolute", alignSelf: "flex-end", marginTop: (8.5/734)*windowHeight, right: (8.5/734)*windowHeight, borderRadius: 9, alignItems: "center", justifyContent: "center", shadowRadius: 10, shadowOpacity: 0.32, shadowOffset: {width: 0, height: 2}, elevation: 10}} onPressOut={() => {
                                     if (nameValue.trim()){
+                                        console.log("in?");
+                                        try {
+                                            var counterP = 0;
+                                            for (var k = 0;k<list.length;k++){
+                                                console.log(list[k].ptname + "\n");
+                                                if (list[k].ptname == nameValue.trim()){
+                                                    console.log("in if, yes same ptn");
+                                                    counterP++;
+                                                    break;
+                                                }
+                                            }
+                                            if (counterP == 1){
+                                                return console.log("Painting already exists!");
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                        }
+
                                         setCurrentId(currentId +1); 
 
-                                        const newList = list.concat({ptname: nameValue, id: currentId, hcArray: [/*empty colors for now*/]}); storePaintingNames(newList); console.log("NEWLIST (array)    ------     " + newList); setList(newList);
+                                        const newList = list.concat({ptname: nameValue.trim(), id: currentId, hcArray: [/*empty colors for now*/]}); storePaintingNames(newList); console.log("NEWLIST (array)    ------     " + newList); setList(newList);
 
                                         setShouldEnterText(false); setNameValue("");
                                     }
@@ -161,8 +205,8 @@ export default function Gallery(props){
              * 
              */
             var k = 1;
-            var hexCodesArrayReal = JSON.parse(JSON.stringify(colorsLoaded));
-            setListCS(hexCodesArrayReal)
+            
+            console.log("in colors, variable hexCodesArrayReal is:   " + listCS);
             return (
                 <SafeAreaView style={{top: (45/734)*windowHeight}}>
                     <Pressable style={{position: "absolute", left: (18.2/414)*windowWidth}} onPress={() => {console.log("btn cliked"); setColorsLoaded(null); setShowPalletteColor(null);}}>
@@ -170,6 +214,7 @@ export default function Gallery(props){
                     </Pressable>
                     <Text style={{fontFamily: 'ApercuBold', fontSize: 40, letterSpacing: -2, alignSelf: "center", marginBottom: (27/734)*windowHeight}}>{showPalletteColor}</Text>
                     <ScrollView>
+                        {/*DOWN || LISTCS IS GLOBAL, BUT WE WANT A SPECIFIC LIST FOR EACH PAINTING*/}
                         {listCS.map(item => (
                             <View key={++k} style={{backgroundColor: item, width: "100%", justifyContent: 'center', height: (78/734)*windowHeight, paddingLeft: (16/414)*windowWidth}}>
                                 <Text style={{fontFamily: "ApercuBold", fontSize: 25, letterSpacing: -2}}>
@@ -178,7 +223,7 @@ export default function Gallery(props){
                             </View>
                         ))}
                         
-                        <Pressable style={{width: "100%", justifyContent: 'center', alignItems: "center", height: (78/734)*windowHeight}}>
+                        <Pressable style={{width: "100%", justifyContent: 'center', alignItems: "center", height: (78/734)*windowHeight, display: shouldEnterTextCS ? "none" : "flex"}} onPressOut={() => {setShouldEnterTextCS(true);}}>
                             <Text style={{fontFamily: "ApercuBold", fontSize: 25, letterSpacing: -2}}>
                                 + Add color
                             </Text>
@@ -190,7 +235,8 @@ export default function Gallery(props){
                                 if (nameValueCS.trim()){
                                     
                                     //WE ALREADY HAVE THE ARRAY AT @listCS
-                                    const newListCS = listCS.concat(nameValueCS);
+                                    
+                                    const newListCS = listCS.concat(nameValueCS.trim());
                                     setListCS(newListCS);
                                     //storePaintingNames({ptname: nameValue, id: currentId, hcArray: [/*empty colors for now*/]})
 
@@ -247,6 +293,7 @@ export default function Gallery(props){
             />
         );
     }
+        
     
 }
 const styles = StyleSheet.create({

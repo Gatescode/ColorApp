@@ -8,6 +8,7 @@ import SettingsIcon from '../assets/settings.svg';
 import { loadAsync } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import Settings from './Settings';
+import CameraScreen from './CameraScreen';
 
 // https://www.youtube.com/watch?v=gPaBicMaib4
 
@@ -34,12 +35,16 @@ const Tabs = () => {
                     else if (route.name === "Settings"){
                         return <SettingsIcon />;
                     }
+                    else if (route.name === "CameraScreen"){
+                        return <SettingsIcon />;
+                    }
                 }
                 
             })} tabBarOptions={{labelStyle: {fontFamily: "Apercu"}}}>
                 <Tab.Screen name="Home" component={Home} />
                 <Tab.Screen name="Gallery" component={Gallery}/>
                 <Tab.Screen name="Settings" component={Settings}/>
+                <Tab.Screen name="CameraScreen" component={CameraScreen}/>
             </Tab.Navigator>
         );
     } else {

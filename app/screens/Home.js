@@ -4,13 +4,13 @@ import Rainbow from '../assets/HomeRainbow.svg';
 import { loadAsync, useFonts } from 'expo-font';
 import { useState } from 'react';
 import AppLoading from 'expo-app-loading';
-
+import Gallery from './Gallery';
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
+import { useNavigation } from '@react-navigation/native';
 
 //FOLLOW IT, BUT DONT IMPLEMENT TABS.JS IN APP, DO IN HOME SCREENS
-
 
 
 
@@ -48,6 +48,7 @@ const getFonts = () =>
 // const AppContainer = createAppContainer(bottomTabNavigator);
 
 export default function Home(props){
+    const navigation = useNavigation();
     const [fontsloaded, setFontsLoaded] = useState(false);
 
     if (fontsloaded) {
@@ -73,7 +74,7 @@ export default function Home(props){
                             <Text style={{fontFamily: "ApercuBold", left: "5.2486%", top: "19.8%",marginBottom: "9.48%", fontSize: 15}}>Recents</Text>
                             <Text style={{fontFamily: "Apercu", left: "5.2486%", position: "absolute", top: "44.8%", fontSize: 12}}>View your recent scanned colors.</Text> 
                         </Pressable>
-                        <Pressable style={styles.largequickbtn}>
+                        <Pressable style={styles.largequickbtn} onPress={() => {navigation.navigate("Gallery")}}>
                             <Text style={{fontFamily: "ApercuBold", left: "5.2486%", top: "21.55%",marginBottom: "9.48%", fontSize: 15}}>Gallery</Text>
                             <Text style={{fontFamily: "Apercu", left: "5.2486%", position: "absolute", top: "46.55%", fontSize: 12}}>View all of your palettes.</Text> 
                         </Pressable>

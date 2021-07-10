@@ -64,6 +64,3 @@ export default function Colors({paintingName, hexCodesArray, paintingId}){
         );
     }
 }
-const styles = StyleSheet.create({
-
-});
