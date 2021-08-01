@@ -72,15 +72,15 @@ export default function CameraScreen(props){
                 <View style={{flex: 1}}>
                     <Camera ref={cameraRef} style={{flex: 1, justifyContent: "flex-end"}} type={type} onCameraReady={() => {
                         if (cameraRef){
-                            setTimeout(() => {
-                                cameraRef.current.takePictureAsync({base64: true, skipProcessing: true}).then((data) => {
-                                    //console.log(data.base64);
-                                    const uriSource = "data:image/jpg;base64," + data.base64;
-                                    console.log("in first .then");
+                            // setTimeout(() => {
+                            //     cameraRef.current.takePictureAsync({base64: true, skipProcessing: true}).then((data) => {
+                            //         //console.log(data.base64);
+                            //         const uriSource = "data:image/jpg;base64," + data.base64;
+                            //         console.log("in first .then");
                                     
 
-                                });
-                            }, 4000);
+                            //     });
+                            // }, 4000);
                             if (!onScreen){
                                 cameraRef.current.pausePreview();
                             }
