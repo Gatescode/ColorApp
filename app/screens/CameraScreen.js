@@ -104,20 +104,20 @@ export default function CameraScreen(props){
 
                         }}/> */}
 
-                        <View style={{alignSelf: "center", backgroundColor: "#58c488", width: 25, height: 25}}>
-                        </View>
-                        <View style={{flexDirection: "row", height: (75/736)*windowHeight, alignItems: "center", justifyContent: "space-evenly", backgroundColor: "transparent"}}>
-                            <View style={{backgroundColor: "#a684b0", borderRadius: 9, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
-                                <Text style={{color: "white", fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 20}}>{currentColor}</Text>
+                            <View style={{alignSelf: "center", backgroundColor: "#58c488", width: 25, height: 25}}>
                             </View>
-                            <Pressable style={{backgroundColor: "transparent", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
-                                <Text style={{fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 16, color: "rgba(140, 140, 140, 1)"}}>Copy to Clipboard</Text>
-                            </Pressable>
-                            <Pressable style={{backgroundColor: "white", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: 0.55*(75/736)*windowHeight}}>
-                                <SaveIcon />
-                            </Pressable>
-                        </View>
-                    </Camera>
+                            <View style={{flexDirection: "row", height: (75/736)*windowHeight, alignItems: "center", justifyContent: "space-evenly", backgroundColor: "transparent"}}>
+                                <View style={{backgroundColor: "#a684b0", borderRadius: 9, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
+                                    <Text style={{color: "white", fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 20}}>{currentColor}</Text>
+                                </View>
+                                <Pressable style={{backgroundColor: "transparent", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
+                                    <Text style={{fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 16, color: "rgba(140, 140, 140, 1)"}}>Copy to Clipboard</Text>
+                                </Pressable>
+                                <Pressable style={{backgroundColor: "white", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: 0.55*(75/736)*windowHeight}}>
+                                    <SaveIcon />
+                                </Pressable>
+                            </View>
+                        </Camera>
                     </ViewShot>
                 </View>
             );
