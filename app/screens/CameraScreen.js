@@ -12,6 +12,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 const windowHeight = Dimensions.get("window").height;
 import SaveIcon from '../assets/save.svg';
 import { Asset } from 'expo-asset';
+import ViewShot from "react-native-view-shot";
 import { useNavigation } from '@react-navigation/native';
 import { decode } from 'base64-arraybuffer';
 var jpeg = require('jpeg-js');
@@ -39,7 +40,6 @@ export default function CameraScreen(props){
     //const [uriSource, setUriSource] = useState(null);
     const navigation = useNavigation();
     const cameraRef = useRef(null);
-    const canvasRef = useRef(null);
     navigation.addListener("blur", () => {
         setOnScreen(false);
     });
@@ -70,22 +70,24 @@ export default function CameraScreen(props){
         if (onScreen){
             return (
                 <View style={{flex: 1}}>
-                    <Camera ref={cameraRef} style={{flex: 1, justifyContent: "flex-end"}} type={type} onCameraReady={() => {
-                        if (cameraRef){
-                            // setTimeout(() => {
-                            //     cameraRef.current.takePictureAsync({base64: true, skipProcessing: true}).then((data) => {
-                            //         //console.log(data.base64);
-                            //         const uriSource = "data:image/jpg;base64," + data.base64;
-                            //         console.log("in first .then");
-                                    
+                    <ViewShot onCapture={(uri) => {console.log("VIEW URI:  HERE----" + uri)}}>
+                        <Camera ref={cameraRef} style={{flex: 1, justifyContent: "flex-end"}} type={type} onCameraReady={() => {
+                            if (cameraRef){
+                                // setTimeout(() => {
+                                //     cameraRef.current.takePictureAsync({base64: true, skipProcessing: true}).then((data) => {
+                                //         //console.log(data.base64);
+                                //         const uriSource = "data:image/jpg;base64," + data.base64;
+                                //         console.log("in first .then");
 
-                            //     });
-                            // }, 4000);
-                            if (!onScreen){
-                                cameraRef.current.pausePreview();
+
+                                //     });
+                                // }, 4000);
+                                if (!onScreen){
+                                    cameraRef.current.pausePreview();
+                                }
                             }
-                        }
-                    }}>
+                        }} >
+                    
                         {/* <GLView style={{width: 1, height: 1}} onContextCreate={(gl) => {
                             console.log("in contextCreate");
                             if (uriSource){
@@ -116,6 +118,7 @@ export default function CameraScreen(props){
                             </Pressable>
                         </View>
                     </Camera>
+                    </ViewShot>
                 </View>
             );
         } else {
