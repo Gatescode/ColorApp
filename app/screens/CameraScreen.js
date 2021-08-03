@@ -5,7 +5,7 @@ import { loadAsync } from 'expo-font';
 import { useState, useEffect, useRef } from 'react';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Camera } from 'expo-camera';
+import { RNCamera } from 'react-native-camera';
 import { GLView } from 'expo-gl';
 import * as FileSystem from 'expo-file-system';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -33,8 +33,7 @@ const getFonts = () =>
 });
 export default function CameraScreen(props){
     const [fontsloaded, setFontsLoaded] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
+    const [type, setType] = useState(RNCamera.Constants.Type.back);
     const [currentColor, setCurrentColor] = useState("...");
     const [onScreen, setOnScreen] = useState(false);
     //const [uriSource, setUriSource] = useState(null);
@@ -47,47 +46,28 @@ export default function CameraScreen(props){
     navigation.addListener("focus", () => {
         setOnScreen(true);
     });
-    useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestPermissionsAsync();
-            console.log(status);
-            setHasPermission(status === 'granted');
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //         const { status } = await RNCamera.requestPermissionsAsync();
+    //         console.log(status);
+    //         setHasPermission(status === 'granted');
+    //     })();
+    // }, []);
 
-    if (hasPermission === null) {
-        return <View />;
-    }
-    if (hasPermission === false) {
-        return (
-            <SafeAreaView>
-                <Text>No access to camera</Text>
-            </SafeAreaView>
-        );
-    }
+
     
     if (fontsloaded){
         if (onScreen){
             return (
                 <View style={{flex: 1}}>
-                    <ViewShot onCapture={(uri) => {console.log("VIEW URI:  HERE----" + uri)}}>
-                        <Camera ref={cameraRef} style={{flex: 1, justifyContent: "flex-end"}} type={type} onCameraReady={() => {
+                    {/* <ViewShot onCapture={(uri) => {console.log("VIEW URI:  HERE----" + uri)}}> */}
+                        <RNCamera captureAudio={false} ref={cameraRef} style={{flex: 1, justifyContent: "flex-end"}} type={type} androidCameraPermissionOptions={{title: "Permission to use camera", message: "We need your permission to use your camera", buttonNegative: 'Cancel', buttonPositive: "OK"}} onCameraReady={() => {
                             if (cameraRef){
-                                // setTimeout(() => {
-                                //     cameraRef.current.takePictureAsync({base64: true, skipProcessing: true}).then((data) => {
-                                //         //console.log(data.base64);
-                                //         const uriSource = "data:image/jpg;base64," + data.base64;
-                                //         console.log("in first .then");
-
-
-                                //     });
-                                // }, 4000);
-                                if (!onScreen){
-                                    cameraRef.current.pausePreview();
-                                }
+                                
                             }
-                        }} >
-                    
+                        }} />
+                    {/* </ViewShot> */}
+                        
                         {/* <GLView style={{width: 1, height: 1}} onContextCreate={(gl) => {
                             console.log("in contextCreate");
                             if (uriSource){
@@ -104,21 +84,19 @@ export default function CameraScreen(props){
 
                         }}/> */}
 
-                            <View style={{alignSelf: "center", backgroundColor: "#58c488", width: 25, height: 25}}>
+                        <View style={{alignSelf: "center", backgroundColor: "#58c488", width: 25, height: 25}}>
+                        </View>
+                        <View style={{flexDirection: "row", height: (75/736)*windowHeight, alignItems: "center", justifyContent: "space-evenly", backgroundColor: "transparent"}}>
+                            <View style={{backgroundColor: "#a684b0", borderRadius: 9, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
+                                <Text style={{color: "white", fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 20}}>{currentColor}</Text>
                             </View>
-                            <View style={{flexDirection: "row", height: (75/736)*windowHeight, alignItems: "center", justifyContent: "space-evenly", backgroundColor: "transparent"}}>
-                                <View style={{backgroundColor: "#a684b0", borderRadius: 9, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
-                                    <Text style={{color: "white", fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 20}}>{currentColor}</Text>
-                                </View>
-                                <Pressable style={{backgroundColor: "transparent", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
-                                    <Text style={{fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 16, color: "rgba(140, 140, 140, 1)"}}>Copy to Clipboard</Text>
-                                </Pressable>
-                                <Pressable style={{backgroundColor: "white", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: 0.55*(75/736)*windowHeight}}>
-                                    <SaveIcon />
-                                </Pressable>
-                            </View>
-                        </Camera>
-                    </ViewShot>
+                            <Pressable style={{backgroundColor: "transparent", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: (150/414)*windowWidth}}>
+                                <Text style={{fontFamily: "ApercuBold", letterSpacing: -1, fontSize: 16, color: "rgba(140, 140, 140, 1)"}}>Copy to Clipboard</Text>
+                            </Pressable>
+                            <Pressable style={{backgroundColor: "white", borderRadius: 9, borderColor: "#EAE7E2", borderWidth: 2, height: "55%", justifyContent: "space-evenly", alignItems: "center", width: 0.55*(75/736)*windowHeight}}>
+                                <SaveIcon />
+                            </Pressable>
+                        </View>
                 </View>
             );
         } else {
